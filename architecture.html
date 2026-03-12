@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NHN Performance Agent - Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #040A12;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+    padding-top: 20px;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(44, 140, 232, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(44, 140, 232, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(60px, 60px); }
+  }
+
+  /* Ambient glow */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15;
+    z-index: 0;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .glow-orb.blue { width: 500px; height: 500px; background: #2C8CE8; top: 20%; left: 30%; }
+  .glow-orb.gold { width: 400px; height: 400px; background: #FFC000; top: 50%; right: 10%; animation-delay: -4s; }
+  .glow-orb.cyan { width: 300px; height: 300px; background: #00D4AA; bottom: 10%; left: 10%; animation-delay: -2s; }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -20px); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 1200px;
+    padding: 40px;
+    transform-origin: top center;
+  }
+
+
+  /* Title */
+  .title-area {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .title-area h1 {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2C8CE8, #00D4AA, #FFC000);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .title-area .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Architecture layout */
+  .arch-layout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    position: relative;
+  }
+
+  /* Columns */
+  .col-input, .col-output {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 175px;
+    flex-shrink: 0;
+  }
+
+  .col-process {
+    flex: 1;
+    max-width: 520px;
+    margin: 0 30px;
+  }
+
+  /* Section labels */
+  .section-label {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    padding: 5px 0;
+  }
+  .section-label.input { color: #2C8CE8; }
+  .section-label.process { color: #00D4AA; }
+  .section-label.output { color: #FFC000; }
+
+  /* Cards */
+  .card {
+    padding: 14px 18px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+  .card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Input cards */
+  .card.input {
+    background: linear-gradient(135deg, rgba(44, 140, 232, 0.12), rgba(44, 140, 232, 0.04));
+    border: 1px solid rgba(44, 140, 232, 0.25);
+  }
+  .card.input:hover {
+    border-color: rgba(44, 140, 232, 0.5);
+    box-shadow: 0 4px 20px rgba(44, 140, 232, 0.15);
+  }
+  .card.input .card-icon { color: #2C8CE8; }
+
+  /* Output cards */
+  .card.output {
+    background: linear-gradient(135deg, rgba(255, 192, 0, 0.12), rgba(255, 192, 0, 0.04));
+    border: 1px solid rgba(255, 192, 0, 0.25);
+  }
+  .card.output:hover {
+    border-color: rgba(255, 192, 0, 0.5);
+    box-shadow: 0 4px 20px rgba(255, 192, 0, 0.15);
+  }
+  .card.output .card-icon { color: #FFC000; }
+
+  .card-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-icon {
+    font-size: 22px;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .card-text .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .card-text .card-desc {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 2px;
+  }
+
+  /* Process box */
+  .process-box {
+    background: linear-gradient(135deg, rgba(0, 212, 170, 0.06), rgba(44, 140, 232, 0.06));
+    border: 1.5px solid rgba(0, 212, 170, 0.2);
+    border-radius: 24px;
+    padding: 30px;
+    position: relative;
+  }
+  .process-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px; bottom: -1px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(0, 212, 170, 0.3), rgba(44, 140, 232, 0.1), rgba(255, 192, 0, 0.2));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .process-box:hover::before { opacity: 1; }
+
+  .process-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .process-title h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .process-title .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #00D4AA;
+    background: rgba(0, 212, 170, 0.1);
+    border: 1px solid rgba(0, 212, 170, 0.2);
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+
+  /* Inner engine cards */
+  .engine-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .engine-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .engine-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .engine-card .engine-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .engine-card .engine-name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .engine-card .engine-role {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+  }
+  .engine-card.claude { border-color: rgba(217, 119, 87, 0.3); }
+  .engine-card.claude .engine-name { color: #D97757; }
+  .engine-card.bmad { border-color: rgba(0, 212, 170, 0.3); }
+  .engine-card.bmad .engine-name { color: #00D4AA; }
+
+  /* Guardrail / Context layer */
+  .context-layer {
+    background: linear-gradient(90deg, rgba(44, 140, 232, 0.08), rgba(255, 192, 0, 0.08));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .context-layer .ctx-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-right: 8px;
+  }
+  .ctx-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* Flow arrows (SVG) */
+  .flow-arrows {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Animated dash */
+  .flow-line {
+    fill: none;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+    animation: dashFlow 1.5s linear infinite;
+  }
+  .flow-line.input-flow { stroke: rgba(44, 140, 232, 0.35); }
+  .flow-line.output-flow { stroke: rgba(255, 192, 0, 0.35); }
+
+  @keyframes dashFlow {
+    0% { stroke-dashoffset: 10; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  /* Animated dots on paths */
+  .flow-dot {
+    fill: #2C8CE8;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+  .flow-dot.gold { fill: #FFC000; }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.3; r: 2; }
+    50% { opacity: 1; r: 3.5; }
+  }
+
+  /* Arrow heads */
+  .arrow-head {
+    fill: rgba(44, 140, 232, 0.5);
+  }
+  .arrow-head.gold { fill: rgba(255, 192, 0, 0.5); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 1px;
+  }
+
+  /* Pulse animation for process box */
+  @keyframes borderPulse {
+    0%, 100% { border-color: rgba(0, 212, 170, 0.2); }
+    50% { border-color: rgba(0, 212, 170, 0.4); }
+  }
+  .process-box { animation: borderPulse 4s ease-in-out infinite; }
+
+  /* Stagger animation for cards */
+  .card, .engine-card, .context-layer {
+    opacity: 0;
+    animation: fadeSlideIn 0.6s ease-out forwards;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .col-input .card:nth-child(2) { animation-delay: 0.1s; }
+  .col-input .card:nth-child(3) { animation-delay: 0.2s; }
+  .col-input .card:nth-child(4) { animation-delay: 0.3s; }
+  .col-input .card:nth-child(5) { animation-delay: 0.4s; }
+  .col-input .card:nth-child(6) { animation-delay: 0.5s; }
+  .engine-card { animation-delay: 0.5s; }
+  .context-layer { animation-delay: 0.7s; }
+  .col-output .card:nth-child(2) { animation-delay: 0.6s; }
+  .col-output .card:nth-child(3) { animation-delay: 0.7s; }
+  .col-output .card:nth-child(4) { animation-delay: 0.8s; }
+  .col-output .card:nth-child(5) { animation-delay: 0.9s; }
+  .col-output .card:nth-child(6) { animation-delay: 1.0s; }
+</style>
+</head>
+<body>
+
+<div class="glow-orb blue"></div>
+<div class="glow-orb gold"></div>
+<div class="glow-orb cyan"></div>
+
+<div class="container">
+  <div class="title-area">
+    <h1>NHN Performance Agent</h1>
+    <div class="subtitle">Context-Aware Marketing AI Agent</div>
+  </div>
+
+  <div class="arch-layout" id="archLayout">
+    <!-- INPUT -->
+    <div class="col-input">
+      <div class="section-label input">DATA SOURCES</div>
+      <div class="card input" id="card-media">
+        <div class="card-content">
+          <div class="card-icon">📢</div>
+          <div class="card-text">
+            <div class="card-title">Media API</div>
+            <div class="card-desc">Meta, Google, TikTok</div>
+          </div>
+        </div>
+      </div>
+      <div class="card input" id="card-mmp">
+        <div class="card-content">
+          <div class="card-icon">📊</div>
+          <div class="card-text">
+            <div class="card-title">MMP</div>
+            <div class="card-desc">AppsFlyer, Adjust</div>
+          </div>
+        </div>
+      </div>
+      <div class="card input" id="card-sensor">
+        <div class="card-content">
+          <div class="card-icon">🔍</div>
+          <div class="card-text">
+            <div class="card-title">Sensor Tower</div>
+            <div class="card-desc">Market Intelligence</div>
+          </div>
+        </div>
+      </div>
+      <div class="card input" id="card-store">
+        <div class="card-content">
+          <div class="card-icon">🏪</div>
+          <div class="card-text">
+            <div class="card-title">App Store</div>
+            <div class="card-desc">Google Play, App Store</div>
+          </div>
+        </div>
+      </div>
+      <div class="card input" id="card-bi">
+        <div class="card-content">
+          <div class="card-icon">🗄️</div>
+          <div class="card-text">
+            <div class="card-title">Internal BI</div>
+            <div class="card-desc">DW, 1st Party Data</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROCESS -->
+    <div class="col-process">
+      <div class="section-label process">AI AGENT ENGINE</div>
+      <div class="process-box">
+        <div class="process-title">
+          <h2>NHN Performance Agent</h2>
+          <div class="badge">Guardrail Protected</div>
+        </div>
+        <div class="engine-row">
+          <div class="engine-card claude">
+            <div class="engine-icon">🧠</div>
+            <div class="engine-name">Claude</div>
+            <div class="engine-role">AI Brain &mdash; Analysis &amp; Reasoning</div>
+          </div>
+          <div class="engine-card bmad">
+            <div class="engine-icon">⚙️</div>
+            <div class="engine-name">BMAD</div>
+            <div class="engine-role">Workflow &mdash; Automation Framework</div>
+          </div>
+        </div>
+        <div class="context-layer">
+          <span class="ctx-label">Context Layer</span>
+          <span class="ctx-tag">KPI Rules</span>
+          <span class="ctx-tag">Media Classification</span>
+          <span class="ctx-tag">Anomaly Thresholds</span>
+          <span class="ctx-tag">iOS/ATT Awareness</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="col-output">
+      <div class="section-label output">AUTOMATED OUTPUT</div>
+      <div class="card output" id="card-report">
+        <div class="card-content">
+          <div class="card-icon">📋</div>
+          <div class="card-text">
+            <div class="card-title">Auto Report</div>
+            <div class="card-desc">XLSX, HTML Dashboard</div>
+          </div>
+        </div>
+      </div>
+      <div class="card output" id="card-insight">
+        <div class="card-content">
+          <div class="card-icon">💡</div>
+          <div class="card-text">
+            <div class="card-title">Insight & Action</div>
+            <div class="card-desc">AI-Driven Recommendations</div>
+          </div>
+        </div>
+      </div>
+      <div class="card output" id="card-alert">
+        <div class="card-content">
+          <div class="card-icon">🚨</div>
+          <div class="card-text">
+            <div class="card-title">Anomaly Alert</div>
+            <div class="card-desc">Real-time Detection</div>
+          </div>
+        </div>
+      </div>
+      <div class="card output" id="card-media-opt">
+        <div class="card-content">
+          <div class="card-icon">🎛️</div>
+          <div class="card-text">
+            <div class="card-title">Media Tuning</div>
+            <div class="card-desc">Budget & Bid Automation</div>
+          </div>
+        </div>
+      </div>
+      <div class="card output" id="card-creative">
+        <div class="card-content">
+          <div class="card-icon">🎨</div>
+          <div class="card-text">
+            <div class="card-title">Creative On/Off</div>
+            <div class="card-desc">Performance-based Toggle</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SVG Flow Arrows -->
+    <svg class="flow-arrows" id="flowSvg"></svg>
+  </div>
+
+  <div class="footer">
+    NHN AI Sprint 2026 &mdash; Track 2: Business Productivity
+  </div>
+</div>
+
+<script>
+function drawFlows() {
+  const svg = document.getElementById('flowSvg');
+  const layout = document.getElementById('archLayout');
+  const rect = layout.getBoundingClientRect();
+  svg.setAttribute('width', rect.width);
+  svg.setAttribute('height', rect.height);
+  svg.innerHTML = '';
+
+  // Helper: get element center relative to layout
+  function getPos(el, side) {
+    const r = el.getBoundingClientRect();
+    const lx = rect.left;
+    const ly = rect.top;
+    if (side === 'right') return { x: r.right - lx, y: r.top - ly + r.height / 2 };
+    if (side === 'left') return { x: r.left - lx, y: r.top - ly + r.height / 2 };
+    return { x: r.left - lx + r.width / 2, y: r.top - ly + r.height / 2 };
+  }
+
+  const processBox = document.querySelector('.process-box');
+  const pRect = processBox.getBoundingClientRect();
+  const pLeft = { x: pRect.left - rect.left, y: pRect.top - rect.top + pRect.height / 2 };
+  const pRight = { x: pRect.right - rect.left, y: pRect.top - rect.top + pRect.height / 2 };
+
+  // Input flows
+  const inputs = ['card-media', 'card-mmp', 'card-sensor', 'card-store', 'card-bi'];
+  inputs.forEach((id, i) => {
+    const el = document.getElementById(id);
+    const from = getPos(el, 'right');
+    const to = { x: pLeft.x, y: pLeft.y + (i - 2) * 20 };
+    const cp1x = from.x + 40;
+    const cp2x = to.x - 40;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M${from.x},${from.y} C${cp1x},${from.y} ${cp2x},${to.y} ${to.x},${to.y}`);
+    path.setAttribute('class', 'flow-line input-flow');
+    path.style.animationDelay = `${i * 0.2}s`;
+    svg.appendChild(path);
+
+    // Dot
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('class', 'flow-dot');
+    dot.setAttribute('r', '2.5');
+    dot.style.animationDelay = `${i * 0.3}s`;
+    const animMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+    animMotion.setAttribute('dur', `${2 + i * 0.3}s`);
+    animMotion.setAttribute('repeatCount', 'indefinite');
+    animMotion.setAttribute('path', `M${from.x},${from.y} C${cp1x},${from.y} ${cp2x},${to.y} ${to.x},${to.y}`);
+    dot.appendChild(animMotion);
+    svg.appendChild(dot);
+
+    // Arrow head
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    const ax = to.x - 2;
+    const ay = to.y;
+    arrow.setAttribute('points', `${ax-8},${ay-4} ${ax},${ay} ${ax-8},${ay+4}`);
+    arrow.setAttribute('class', 'arrow-head');
+    svg.appendChild(arrow);
+  });
+
+  // Output flows
+  const outputs = ['card-report', 'card-insight', 'card-alert', 'card-media-opt', 'card-creative'];
+  outputs.forEach((id, i) => {
+    const el = document.getElementById(id);
+    const to = getPos(el, 'left');
+    const from = { x: pRight.x, y: pRight.y + (i - 2) * 20 };
+    const cp1x = from.x + 40;
+    const cp2x = to.x - 40;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M${from.x},${from.y} C${cp1x},${from.y} ${cp2x},${to.y} ${to.x},${to.y}`);
+    path.setAttribute('class', 'flow-line output-flow');
+    path.style.animationDelay = `${i * 0.2}s`;
+    svg.appendChild(path);
+
+    // Dot
+    const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    dot.setAttribute('class', 'flow-dot gold');
+    dot.setAttribute('r', '2.5');
+    dot.style.animationDelay = `${i * 0.3}s`;
+    const animMotion = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+    animMotion.setAttribute('dur', `${2 + i * 0.3}s`);
+    animMotion.setAttribute('repeatCount', 'indefinite');
+    animMotion.setAttribute('path', `M${from.x},${from.y} C${cp1x},${from.y} ${cp2x},${to.y} ${to.x},${to.y}`);
+    dot.appendChild(animMotion);
+    svg.appendChild(dot);
+
+    // Arrow head
+    const arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    const ax = to.x + 2;
+    const ay = to.y;
+    arrow.setAttribute('points', `${ax+8},${ay-4} ${ax},${ay} ${ax+8},${ay+4}`);
+    arrow.setAttribute('class', 'arrow-head gold');
+    svg.appendChild(arrow);
+  });
+}
+
+window.addEventListener('load', () => setTimeout(drawFlows, 100));
+window.addEventListener('resize', drawFlows);
+</script>
+</body>
+</html>
