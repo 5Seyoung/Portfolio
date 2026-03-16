@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Context-Aware Marketing AI Agent | NHN AI 스프린톤 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #1a2744;
+    --accent: #e85d3a;
+    --accent-light: #fff3f0;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f5;
+    --gray-200: #e9ecef;
+    --gray-500: #868e96;
+    --gray-700: #495057;
+    --gray-900: #212529;
+    --green: #20c997;
+    --yellow: #fcc419;
+    --red: #fa5252;
+    --blue: #339af0;
+  }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    color: var(--gray-900);
+    line-height: 1.75;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1a2744 0%, #2d4a7a 50%, #3a6073 100%);
+    color: white;
+    text-align: center;
+    padding: 100px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(232,93,58,0.15) 0%, transparent 60%);
+  }
+  .hero * { position: relative; z-index: 1; }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero .tagline {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 100px;
+    padding: 8px 28px;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 24px;
+    backdrop-filter: blur(4px);
+  }
+  .hero .meta {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .hero .author {
+    font-weight: 500;
+    color: var(--yellow);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    z-index: 100;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 24px;
+  }
+  nav a {
+    display: inline-block;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: var(--gray-500);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  nav a:hover, nav a.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  section:last-child { border-bottom: none; }
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-weight: 400;
+    margin-right: 4px;
+  }
+  .section-sub {
+    color: var(--gray-500);
+    font-size: 0.95rem;
+    margin-bottom: 36px;
+  }
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin: 36px 0 12px;
+  }
+  p { margin-bottom: 16px; color: var(--gray-700); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 24px 0;
+    font-weight: 500;
+    color: var(--gray-900);
+    line-height: 1.8;
+  }
+  .callout strong { color: var(--accent); }
+
+  .callout-dark {
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 24px 0;
+    border-left: none;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 24px;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  .card .icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .card h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--gray-900);
+  }
+  .card p { font-size: 0.9rem; margin-bottom: 0; }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead { background: var(--primary); color: white; }
+  th { padding: 12px 16px; text-align: left; font-weight: 500; }
+  td { padding: 12px 16px; border-top: 1px solid var(--gray-200); }
+  tbody tr:hover { background: var(--gray-50); }
+
+  /* ── FLOW ── */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+  }
+  .flow-num {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .flow-step .flow-content { flex: 1; }
+  .flow-step .flow-title { font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+  .flow-step .flow-desc { font-size: 0.9rem; color: var(--gray-500); }
+
+  /* ── COMPARE ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  .compare-bad {
+    background: #fff5f5;
+    border: 1px solid #ffc9c9;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .compare-good {
+    background: #f0fff4;
+    border: 1px solid #b2f2bb;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .compare-bad .label, .compare-good .label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .compare-bad .label { color: var(--red); }
+  .compare-good .label { color: var(--green); }
+  .compare-bad p, .compare-good p { font-size: 0.9rem; margin-bottom: 0; }
+
+  /* ── TAGS ── */
+  .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin: 2px 4px 2px 0;
+  }
+  .tag-green { background: #d3f9d8; color: #2b8a3e; }
+  .tag-yellow { background: #fff3bf; color: #e67700; }
+  .tag-red { background: #ffe3e3; color: #c92a2a; }
+  .tag-gray { background: var(--gray-100); color: var(--gray-700); }
+
+  /* ── PIPELINE ── */
+  .pipeline {
+    background: var(--gray-50);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 24px 0;
+    text-align: center;
+  }
+  .pipeline-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .pipeline-box {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .pipeline-box.accent {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .pipeline-box.primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  .pipeline-arrow {
+    font-size: 1.2rem;
+    color: var(--gray-500);
+  }
+
+  /* ── INSIGHT ── */
+  .insight-block {
+    border-left: 3px solid var(--accent);
+    padding: 16px 24px;
+    margin: 20px 0;
+    background: white;
+  }
+  .insight-block .insight-title {
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .insight-block p { font-size: 0.95rem; margin-bottom: 0; }
+
+  /* ── ROADMAP ── */
+  .roadmap {
+    display: flex;
+    gap: 0;
+    margin: 24px 0;
+    position: relative;
+  }
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    z-index: 0;
+  }
+  .roadmap-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .roadmap-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin: 14px auto 12px;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .roadmap-item:last-child .roadmap-dot { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+  .roadmap-label { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+  .roadmap-desc { font-size: 0.75rem; color: var(--gray-500); margin-top: 4px; }
+
+  /* ── ARCH DIAGRAM ── */
+  .arch {
+    background: #0d1b2a;
+    border-radius: 16px;
+    padding: 36px 36px 28px;
+    margin: 24px auto 32px;
+    max-width: 1200px;
+    color: white;
+    overflow: hidden;
+  }
+  .arch-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #4eecc4;
+    margin-bottom: 4px;
+  }
+  .arch-subtitle {
+    text-align: center;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 28px;
+  }
+  .arch-layout {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 380px) 220px;
+    gap: 60px;
+    justify-content: center;
+    align-items: stretch;
+  }
+  .arch-col-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .arch-col-label.src { color: #4eecc4; }
+  .arch-col-label.out { color: #f0a030; }
+  .arch-source-item, .arch-output-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(78,236,196,0.25);
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    background: rgba(78,236,196,0.05);
+  }
+  .arch-output-item {
+    border-color: rgba(240,160,48,0.3);
+    background: rgba(240,160,48,0.05);
+    flex-direction: row-reverse;
+    text-align: right;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .arch-source-item .arch-icon, .arch-output-item .arch-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .arch-item-name { font-weight: 600; color: white; line-height: 1.3; }
+  .arch-item-sub { font-size: 0.65rem; color: rgba(255,255,255,0.5); }
+  .arch-center-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .arch-engine {
+    border: 1.5px solid rgba(78,236,196,0.35);
+    border-radius: 14px;
+    padding: 14px 12px 12px;
+    background: rgba(78,236,196,0.03);
+    position: relative;
+    animation: archBorderPulse 4s ease-in-out infinite;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  @keyframes archBorderPulse {
+    0%, 100% { border-color: rgba(78,236,196,0.25); }
+    50% { border-color: rgba(78,236,196,0.5); }
+  }
+  .arch-engine-title {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .arch-engine-desc {
+    text-align: center;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+  .arch-guardrail-badge {
+    display: block;
+    text-align: center;
+    margin: 0 auto 10px;
+    padding: 2px 12px;
+    border-radius: 100px;
+    border: 1px solid #4eecc4;
+    color: #4eecc4;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+  .arch-brain-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .arch-brain-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+  }
+  .arch-brain-box .arch-brain-icon { font-size: 1.3rem; margin-bottom: 4px; }
+  .arch-brain-box .arch-brain-name { font-weight: 700; font-size: 0.8rem; }
+  .arch-brain-box .arch-brain-name.claude { color: #f0a0c0; }
+  .arch-brain-box .arch-brain-name.bmad { color: #a0b0c0; }
+  .arch-brain-box .arch-brain-desc { font-size: 0.6rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .arch-context-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+  .arch-context-label {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-bottom: 3px;
+  }
+  .arch-context-tag {
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(78,236,196,0.1);
+    border: 1px solid rgba(78,236,196,0.2);
+    font-size: 0.63rem;
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+  }
+  .arch-layout { position: relative; }
+  /* SVG flow arrows */
+  .arch-flow-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .arch-flow-line {
+    fill: none;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
+    animation: archDashFlow 1.5s linear infinite;
+  }
+  .arch-flow-line.input-flow { stroke: rgba(78,236,196,0.35); }
+  .arch-flow-line.output-flow { stroke: rgba(240,160,48,0.35); }
+  @keyframes archDashFlow {
+    0% { stroke-dashoffset: 10; }
+    100% { stroke-dashoffset: 0; }
+  }
+  .arch-flow-dot {
+    fill: #4eecc4;
+    animation: archDotPulse 2s ease-in-out infinite;
+  }
+  .arch-flow-dot.gold { fill: #f0a030; }
+  @keyframes archDotPulse {
+    0%, 100% { opacity: 0.3; r: 2; }
+    50% { opacity: 1; r: 3.5; }
+  }
+  .arch-flow-arrow { fill: rgba(78,236,196,0.5); }
+  .arch-flow-arrow.gold { fill: rgba(240,160,48,0.5); }
+  @media (max-width: 580px) {
+    .arch-layout {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .arch-source-item, .arch-output-item {
+      flex-direction: row;
+      text-align: left;
+    }
+    .arch-col-label { text-align: left; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 40px 24px;
+    font-size: 0.85rem;
+  }
+  footer strong { color: white; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .hero { padding: 60px 20px 50px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .roadmap { flex-direction: column; gap: 16px; }
+    .roadmap::before { display: none; }
+    .roadmap-item { text-align: left; display: flex; gap: 12px; align-items: center; }
+    .roadmap-dot { margin: 0; }
+    section { padding: 48px 0; }
+    nav a { padding: 12px 14px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <h1>Context-Aware<br>Marketing AI Agent</h1>
+  <div class="tagline">숫자만 보는 AI에서, 이유를 아는 AI로</div>
+  <div class="meta">NHN AI 스프린톤 2026 &middot; Track 2: 업무 생산성</div>
+  <div class="author">NHN 마케팅실 오세영</div>
+</header>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <a href="#summary">핵심 요약</a>
+  <a href="#problem">문제</a>
+  <a href="#solution">솔루션</a>
+  <a href="#extension">확장</a>
+  <a href="#diff">차별점</a>
+  <a href="#architecture">아키텍처</a>
+  <a href="#feasibility">실현 가능성</a>
+  <a href="#approach">우리의 접근</a>
+</nav>
+
+<!-- ============ 1. EXECUTIVE SUMMARY ============ -->
+<section id="summary">
+  <div class="container">
+    <h2><span class="num">01</span> 핵심 요약</h2>
+    <p class="section-sub">맥락 없는 AI 분석은, 속도만 빠른 착각이다</p>
+
+    <div class="callout">
+      AI에게 마케팅 데이터를 주면 빠르게 분석해 준다. 그러나 <strong>'왜'를 모른 채 내리는 판단은, 분석이 아니라 오판의 자동화</strong>다.
+      인게임 이벤트로 ROAS가 급등했을 때 "예산을 증액하세요"라고 할 것이고, 플랫폼 정책 문제로 지출이 급감했을 때 "매체를 이동하세요"라고 할 것이다.
+    </div>
+
+    <p>
+      본 기획서는 AI 에이전트가 매체 API, 캘린더 등에서 <strong>운영 맥락을 자동 수집</strong>하고,
+      파악되지 않는 맥락만 담당자에게 확인하여 <strong>신뢰할 수 있는 의사결정</strong>을 돕는
+      <strong>Context-Aware Marketing AI Agent</strong>를 제안한다.
+    </p>
+
+    <div class="pipeline">
+      <div class="pipeline-row">
+        <div class="pipeline-box">INPUT<br><small>서비스/마케팅 지표</small></div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-box accent">Context Layer 주입<br><small>API 자동 수집 + 보완 질문</small></div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-box primary">가드레일 검증<br><small>신뢰도 등급 &middot; Decision Guard &middot; HitL</small></div>
+        <div class="pipeline-arrow">&rarr;</div>
+        <div class="pipeline-box" style="border-color:var(--green);">OUTPUT<br><small>신뢰할 수 있는 AI 결과물</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. PROBLEM ============ -->
+<section id="problem" style="background: var(--gray-50);">
+  <div class="container">
+    <h2><span class="num">02</span> 문제 정의</h2>
+    <p class="section-sub">왜 지금의 AI 마케팅 분석은 위험한가</p>
+
+    <h3>LLM은 숫자만 본다 &mdash; 맥락 없이 분석하면 틀린다</h3>
+    <p>
+      마케팅 데이터의 변동에는 항상 이유가 있다. 인게임 이벤트, 매체 세팅 변경, 플랫폼 정책 이슈, SDK 장애 등
+      &mdash; 숫자 뒤에 숨은 원인을 모른 채 분석하면 필연적으로 오판한다.
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>실제 상황</th><th>LLM의 오판</th><th>실제 원인</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>인게임 페이백 이벤트로 ROAS 급등</td>
+            <td style="color:var(--red);">"성과 개선! 예산 증액!"</td>
+            <td>이벤트 종료 시 원상복귀. 증액하면 예산 낭비</td>
+          </tr>
+          <tr>
+            <td>구글 정책 위반으로 광고 블락</td>
+            <td style="color:var(--red);">"Google 급감! Meta로 이동!"</td>
+            <td>정책 이슈. 이의제기하면 복구됨</td>
+          </tr>
+          <tr>
+            <td>소재 교체로 일시적 CPI 상승</td>
+            <td style="color:var(--red);">"효율 급락! 기존 소재 복원!"</td>
+            <td>의도적 교체. ML 재학습 기간의 일시적 변동</td>
+          </tr>
+          <tr>
+            <td>SDK 장애로 iOS 이벤트 수집 지연</td>
+            <td style="color:var(--red);">"iOS 설치 급감! CPI 폭등!"</td>
+            <td>SDK 지연으로 인한 일시적 집계 오류</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="text-align:center; font-weight:500; color:var(--gray-500);">
+      공통점: 데이터에는 '무엇이' 변했는지만 있고, '왜' 변했는지는 없다.
+    </p>
+
+    <h3>데이터는 넘친다 &mdash; 그러나 담당자는 한두 명이다</h3>
+    <p>
+      AppsFlyer, 매체 대시보드, 내부 BI &mdash; 데이터 소스는 넘치지만 추출, 해석, 인사이트 도출은 1~2명의 담당자에게 집중된다.
+      AI 분석이 늘어날수록 검증할 여력은 줄고, 잘못된 분석이 걸러지지 않고 의사결정에 반영될 위험이 커진다.
+    </p>
+
+    <div class="callout-dark">
+      AI만 믿으면 판단을 그르치고, 사람에게만 의존하면 한계가 있다.<br>
+      <strong style="color:var(--yellow);">AI가 맥락을 이해하되, 최종 판단은 사람이 하는 구조가 필요하다.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. SOLUTION ============ -->
+<section id="solution">
+  <div class="container">
+    <h2><span class="num">03</span> 솔루션</h2>
+    <p class="section-sub">맥락을 주고, 판단을 검증한다 &mdash; 두 축으로 해결</p>
+
+    <!-- 3.1 Context Layer -->
+    <h3>3.1 맥락 수집 시스템 (Context Layer)</h3>
+    <p>
+      매체 API, 캘린더, 장애 로그 등에서 <strong>자동 수집 가능한 맥락은 시스템이 먼저 수집</strong>하고,
+      자동으로 파악되지 않는 맥락(변경 이유, 외부 요인 등)만 담당자에게 확인한다.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num" style="background:var(--primary);">L1</div>
+        <div class="flow-content">
+          <div class="flow-title">도메인 지식 (영구)</div>
+          <div class="flow-desc">UA 스페셜리스트 에이전트의 판단 기준. CPI/ROAS/NetROAS 해석, 인과관계 판단, 위험 시그널 인식, 런칭/서스테이닝 모드 전환.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:var(--accent);">L2</div>
+        <div class="flow-content">
+          <div class="flow-title">Context Layer (매일 갱신)</div>
+          <div class="flow-desc">4개 서브시스템에서 자동 수집된 맥락 데이터</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="background:var(--blue);">L3</div>
+        <div class="flow-content">
+          <div class="flow-title">성과 데이터 (API 연동)</div>
+          <div class="flow-desc">AppsFlyer MCP, 매체 대시보드, 내부 BI에서 실시간 수집</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-weight:600; margin-top:24px;">Context Layer 4개 서브시스템:</p>
+    <div class="card-grid">
+      <div class="card">
+        <span class="icon">&#x1F4DD;</span>
+        <h4>01 UA운영 변경 이력</h4>
+        <p>매체 API로 예산/소재/타겟팅 변경 자동 수집. 변경 이유만 보완 질문.</p>
+      </div>
+      <div class="card">
+        <span class="icon">&#x1F4C5;</span>
+        <h4>02 이벤트 캘린더</h4>
+        <p>인게임 이벤트/프로모션 일정 자동 동기화. 미등록 이벤트만 보완 질문.</p>
+      </div>
+      <div class="card">
+        <span class="icon">&#x1F6A7;</span>
+        <h4>03 정책/장애 로그</h4>
+        <p>플랫폼 정책 변경, SDK 장애 자동 모니터링. 미감지 이슈만 보완 질문.</p>
+      </div>
+      <div class="card">
+        <span class="icon">&#x1F50C;</span>
+        <h4>04 이상치 자동 탐지</h4>
+        <p>통계 기반 이상 감지 후 01~03과 원인 매칭. 미매칭 시 즉시 담당자에게 질문.</p>
+      </div>
+    </div>
+
+    <!-- Before / After -->
+    <p style="font-weight:600; margin-top:32px;">같은 데이터, 다른 판단:</p>
+    <div class="compare-grid">
+      <div class="compare-bad">
+        <div class="label">Context 없이</div>
+        <p>"ROAS 42% 급등! 예산 증액하세요!"</p>
+      </div>
+      <div class="compare-good">
+        <div class="label">Context Layer 적용</div>
+        <p>"ROAS 42%는 페이백 이벤트 영향입니다. 실질 ROAS는 약 20%입니다. 이벤트 종료(3/7) 후 재평가하세요."
+          <br><span class="tag tag-yellow">신뢰도 LOW</span> <span class="tag tag-gray">이벤트 기간 겹침</span></p>
+      </div>
+    </div>
+
+    <!-- 3.2 Guardrail -->
+    <h3>3.2 AI 판단 검증 장치 (가드레일)</h3>
+    <p>AI의 판단에 자신감 수준을 강제 표기하여, 사람이 검증 없이 수용하는 것을 구조적으로 방지한다.</p>
+
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card" style="text-align:center; border-color:var(--accent);">
+        <span class="icon">&#x1F3B2;</span>
+        <h4>신뢰도 등급</h4>
+        <p>모든 판단에 자신감 수준 강제 표기</p>
+        <div style="margin-top:8px;">
+          <span class="tag tag-green">높음</span>
+          <span class="tag tag-yellow">보통</span>
+          <span class="tag tag-red">낮음</span>
+        </div>
+      </div>
+      <div class="card" style="text-align:center; border-color:var(--accent);">
+        <span class="icon">&#x2611;&#xFE0F;</span>
+        <h4>Decision Guard</h4>
+        <p>예산 증감/매체 ON-OFF 등 고위험 권고 전 6항목 자동 체크</p>
+      </div>
+      <div class="card" style="text-align:center; border-color:var(--accent);">
+        <span class="icon">&#x1F464;</span>
+        <h4>Human-in-the-Loop</h4>
+        <p>최종 의사결정은 반드시 사람이 확인</p>
+      </div>
+    </div>
+
+    <details style="margin-top:20px;">
+      <summary style="cursor:pointer; font-weight:600; color:var(--primary);">Decision Guard 6개 항목 상세 보기</summary>
+      <div style="padding:16px 0; font-size:0.9rem; color:var(--gray-700);">
+        <ol style="padding-left:20px; line-height:2;">
+          <li><strong>데이터 충분성</strong> &mdash; 최근 7일 이상의 데이터에 기반하는가?</li>
+          <li><strong>이벤트 분리</strong> &mdash; 프로모션/이벤트 기간이 포함되어 있지 않은가?</li>
+          <li><strong>ML 안정화</strong> &mdash; 매체 설정 변경 후 ML 재학습 기간(7일)이 경과했는가?</li>
+          <li><strong>외부 영향 배제</strong> &mdash; 정책 변경/SDK 장애 등 외부 요인이 없는가?</li>
+          <li><strong>이상치 배제</strong> &mdash; 이상치 플래그된 날짜가 포함되어 있지 않은가?</li>
+          <li><strong>크로스 매체 일관성</strong> &mdash; 다른 매체와 비교했을 때 일관된 트렌드인가?</li>
+        </ol>
+        <p style="margin-top:8px;">하나라도 FAIL이면 해당 권고는 <strong>"의사결정 보류 &mdash; 추가 데이터 필요"</strong> 상태로 출력.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary style="cursor:pointer; font-weight:600; color:var(--primary);">Human-in-the-Loop 영역 구분</summary>
+      <div style="padding:16px 0;">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>영역</th><th>항목</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag tag-green">자동 실행</span></td><td>데이터 수집, 리포트 생성, 이상치 탐지, 트렌드 분석, 신뢰도 판정</td></tr>
+              <tr><td><span class="tag tag-red">사람 확인 필수</span></td><td>예산 증감, 매체 ON/OFF, 새 매체 테스트, 타겟팅 변경, 원인 불명 해석</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 4. EXTENSION ============ -->
+<section id="extension" style="background: var(--gray-50);">
+  <div class="container">
+    <h2><span class="num">04</span> 추가 확장</h2>
+    <p class="section-sub">숫자 해석에서 전략 제안으로</p>
+
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card">
+        <span class="icon">&#x1F3A8;</span>
+        <h4>크리에이티브 인텔리전스</h4>
+        <p>소재별 성과 자동 스코어링 &rarr; On/Off 제안 + Top 퍼포먼스 패턴 도출</p>
+        <p style="font-size:0.8rem; color:var(--gray-500);">수집 &rarr; 분석 &rarr; 판단 &rarr; 제안 4단계 파이프라인</p>
+      </div>
+      <div class="card">
+        <span class="icon">&#x1F4CA;</span>
+        <h4>풀스택 리포트 자동화</h4>
+        <p>3종 리포트로 What Happened &rarr; What Works &rarr; What To Do를 커버</p>
+        <div style="margin-top:8px;">
+          <span class="tag tag-gray">캠페인 성과</span>
+          <span class="tag tag-gray">크리에이티브</span>
+          <span class="tag tag-gray">전략</span>
+        </div>
+      </div>
+      <div class="card">
+        <span class="icon">&#x1F517;</span>
+        <h4>내부 데이터 통합</h4>
+        <p>MMP + 내부 BI를 자체 서버에서 ADID-회원ID 매칭. 유저 단위 분석으로 확장.</p>
+        <p style="font-size:0.8rem; color:var(--gray-500);">LTV D365+, 크로스디바이스, 행동 기반 리텐션</p>
+      </div>
+    </div>
+
+    <details style="margin-top:20px;">
+      <summary style="cursor:pointer; font-weight:600; color:var(--primary);">내부 데이터 통합 상세: MMP 단독 vs 통합 데이터</summary>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <thead><tr><th>분석 항목</th><th>MMP 단독</th><th>통합 데이터</th></tr></thead>
+          <tbody>
+            <tr><td>LTV 분석 기간</td><td>D7~D90</td><td>D7~D365+</td></tr>
+            <tr><td>유저 세그먼트</td><td>ADID 기반</td><td>회원정보 연동 데모그래픽</td></tr>
+            <tr><td>매출 분석</td><td>디바이스 베이스</td><td>회원ID 베이스 (정확한 ROAS)</td></tr>
+            <tr><td>크로스 디바이스</td><td>디바이스 단위</td><td>회원ID 기반 통합 추적</td></tr>
+            <tr><td>히스토리</td><td>6개월</td><td>제한 없음</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 5. DIFFERENTIATION ============ -->
+<section id="diff">
+  <div class="container">
+    <h2><span class="num">05</span> 차별점</h2>
+    <p class="section-sub">MMP, 범용 AI와 근본적으로 다른 접근</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th style="width:18%;">기능</th><th>AppsFlyer (MMP)</th><th>일반 AI (ChatGPT 등)</th><th style="background:var(--accent);">Context Agent</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>맥락 수집</strong></td><td>없음</td><td>사용자 직접 입력</td><td style="background:var(--accent-light);"><strong>API 자동 수집 + 능동 질문</strong></td></tr>
+          <tr><td><strong>이상 탐지</strong></td><td>프로드(가짜설치)만</td><td>기능 없음</td><td style="background:var(--accent-light);"><strong>운영 이상 탐지 + 즉시 질문</strong></td></tr>
+          <tr><td><strong>원인 분석</strong></td><td>WHAT만 보여줌</td><td>맥락 모름 &rarr; 할루시네이션</td><td style="background:var(--accent-light);"><strong>WHY 후보 자동 매칭</strong></td></tr>
+          <tr><td><strong>크리에이티브</strong></td><td>수치 나열</td><td>일반적 분석</td><td style="background:var(--accent-light);"><strong>On/Off 제안 + 패턴 요약</strong></td></tr>
+          <tr><td><strong>리포트</strong></td><td>수동 작성</td><td>What Happened만</td><td style="background:var(--accent-light);"><strong>Why + What To Do 전략 리포트</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. ARCHITECTURE ============ -->
+<section id="architecture" style="background: var(--gray-50);">
+  <div class="container">
+    <h2><span class="num">06</span> 기술 구조</h2>
+    <p class="section-sub">NHN 인프라 위에서 구현 가능한 아키텍처</p>
+
+  </div><!-- close container temporarily -->
+
+    <!-- Architecture Diagram (full width) -->
+    <div class="arch">
+      <div class="arch-title">Performance Agent</div>
+      <div class="arch-subtitle">Context-Aware Marketing AI Agent</div>
+
+      <div class="arch-layout">
+        <!-- LEFT: Data Sources -->
+        <div>
+          <div class="arch-col-label src" style="margin-bottom:2px;">Input</div>
+          <div class="arch-col-label" style="color:rgba(255,255,255,0.4); margin-bottom:10px;">Data Sources</div>
+          <div class="arch-source-item">
+            <span class="arch-icon">&#x1F4CA;</span>
+            <div><div class="arch-item-name">MMP</div><div class="arch-item-sub">AppsFlyer, Adjust 등 &ndash; 1차 데이터 수집</div></div>
+          </div>
+          <div class="arch-source-item">
+            <span class="arch-icon">&#x1F4E2;</span>
+            <div><div class="arch-item-name">Media API</div><div class="arch-item-sub">Google, Meta - 캠페인 타입 및 변동 이력 확인</div></div>
+          </div>
+          <div class="arch-source-item">
+            <span class="arch-icon">&#x1F4F1;</span>
+            <div><div class="arch-item-name">App Store</div><div class="arch-item-sub">Store - 각 스토어 업데이트 및 점검 이력 확인</div></div>
+          </div>
+          <div class="arch-source-item">
+            <span class="arch-icon">&#x1F50D;</span>
+            <div><div class="arch-item-name">Sensor Tower</div><div class="arch-item-sub">경쟁사 또는 카테고리 시장 동향 확인</div></div>
+          </div>
+          <div class="arch-source-item">
+            <span class="arch-icon">&#x1F4BE;</span>
+            <div><div class="arch-item-name">Internal BI</div><div class="arch-item-sub">1st Party Data &ndash; 내부 데이터와 매칭하여 추적</div></div>
+          </div>
+        </div>
+
+        <!-- CENTER: Engine -->
+        <div class="arch-center-col">
+          <div class="arch-col-label" style="color:rgba(255,255,255,0.5);">Agent Engine</div>
+          <div class="arch-engine">
+            <span class="arch-guardrail-badge">Guardrail Protected</span>
+            <div class="arch-engine-desc">수집된 정보를 종합적으로 분석 &ndash; 판단 &ndash; 점검</div>
+            <div class="arch-brain-row">
+              <div class="arch-brain-box">
+                <div class="arch-brain-icon">&#x1F9E0;</div>
+                <div class="arch-brain-name claude">Claude</div>
+                <div class="arch-brain-desc">AI Brain &mdash;<br>Analysis &amp; Reasoning</div>
+              </div>
+              <div class="arch-brain-box">
+                <div class="arch-brain-icon">&#x2699;&#xFE0F;</div>
+                <div class="arch-brain-name bmad">BMAD</div>
+                <div class="arch-brain-desc">Workflow &mdash;<br>Automation Framework</div>
+              </div>
+            </div>
+            <div class="arch-context-row">
+              <div class="arch-context-label">Context Layer</div>
+              <span class="arch-context-tag">KPI 우선순위 판단</span>
+              <span class="arch-context-tag">미디어 타입 고려</span>
+              <span class="arch-context-tag">OS 타입 고려</span>
+              <span class="arch-context-tag">이상치 감지 판단</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Outputs -->
+        <div>
+          <div class="arch-col-label out" style="margin-bottom:2px;">Output</div>
+          <div class="arch-col-label" style="color:rgba(255,255,255,0.4); margin-bottom:10px;">Automated Output</div>
+          <div class="arch-output-item">
+            <span class="arch-icon">&#x1F4C4;</span>
+            <div><div class="arch-item-name">Auto Report</div><div class="arch-item-sub">일간, 주간, 월간 리포트 자동화</div></div>
+          </div>
+          <div class="arch-output-item">
+            <span class="arch-icon">&#x1F4A1;</span>
+            <div><div class="arch-item-name">Insight &amp; Action</div><div class="arch-item-sub">인사이트 분석 및 액션 제안</div></div>
+          </div>
+          <div class="arch-output-item">
+            <span class="arch-icon">&#x1F6A8;</span>
+            <div><div class="arch-item-name">Anomaly Alert</div><div class="arch-item-sub">실시간 이상치 알림 및 대응안 제안</div></div>
+          </div>
+          <div class="arch-output-item">
+            <span class="arch-icon">&#x1F3AF;</span>
+            <div><div class="arch-item-name">Media Tuning</div><div class="arch-item-sub">(승인 후) 예산 조정 및 입찰가 조정 수행</div></div>
+          </div>
+          <div class="arch-output-item">
+            <span class="arch-icon">&#x1F3A8;</span>
+            <div><div class="arch-item-name">Creative On/Off</div><div class="arch-item-sub">(승인 후) 저효율 소재 자동 Off</div></div>
+          </div>
+        </div>
+
+        <!-- SVG Flow Arrows -->
+        <svg class="arch-flow-svg" id="archFlowSvg"></svg>
+      </div>
+    </div>
+
+<script>
+(function(){
+  function drawArchFlows(){
+    var svg=document.getElementById('archFlowSvg');
+    if(!svg)return;
+    var layout=svg.parentElement;
+    var rect=layout.getBoundingClientRect();
+    svg.setAttribute('width',rect.width);
+    svg.setAttribute('height',rect.height);
+    svg.innerHTML='';
+
+    function pos(el,side){
+      var r=el.getBoundingClientRect();
+      var lx=rect.left,ly=rect.top;
+      if(side==='right')return{x:r.right-lx,y:r.top-ly+r.height/2};
+      if(side==='left')return{x:r.left-lx,y:r.top-ly+r.height/2};
+      return{x:r.left-lx+r.width/2,y:r.top-ly+r.height/2};
+    }
+
+    var engine=layout.querySelector('.arch-engine');
+    if(!engine)return;
+    var eRect=engine.getBoundingClientRect();
+    var eLeft={x:eRect.left-rect.left,y:eRect.top-rect.top+eRect.height/2};
+    var eRight={x:eRect.right-rect.left,y:eRect.top-rect.top+eRect.height/2};
+
+    var inputs=layout.querySelectorAll('.arch-source-item');
+    inputs.forEach(function(el,i){
+      var from=pos(el,'right');
+      var to={x:eLeft.x,y:eLeft.y+(i-2)*16};
+      var cp1x=from.x+30,cp2x=to.x-30;
+      var d='M'+from.x+','+from.y+' C'+cp1x+','+from.y+' '+cp2x+','+to.y+' '+to.x+','+to.y;
+
+      var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d',d);
+      path.setAttribute('class','arch-flow-line input-flow');
+      path.style.animationDelay=i*0.2+'s';
+      svg.appendChild(path);
+
+      var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('class','arch-flow-dot');
+      dot.setAttribute('r','2.5');
+      dot.style.animationDelay=i*0.3+'s';
+      var am=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+      am.setAttribute('dur',(2+i*0.3)+'s');
+      am.setAttribute('repeatCount','indefinite');
+      am.setAttribute('path',d);
+      dot.appendChild(am);
+      svg.appendChild(dot);
+
+      var arr=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      var ax=to.x-2,ay=to.y;
+      arr.setAttribute('points',(ax-7)+','+(ay-3.5)+' '+ax+','+ay+' '+(ax-7)+','+(ay+3.5));
+      arr.setAttribute('class','arch-flow-arrow');
+      svg.appendChild(arr);
+    });
+
+    var outputs=layout.querySelectorAll('.arch-output-item');
+    outputs.forEach(function(el,i){
+      var to=pos(el,'left');
+      var from={x:eRight.x,y:eRight.y+(i-2)*16};
+      var cp1x=from.x+30,cp2x=to.x-30;
+      var d='M'+from.x+','+from.y+' C'+cp1x+','+from.y+' '+cp2x+','+to.y+' '+to.x+','+to.y;
+
+      var path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d',d);
+      path.setAttribute('class','arch-flow-line output-flow');
+      path.style.animationDelay=i*0.2+'s';
+      svg.appendChild(path);
+
+      var dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('class','arch-flow-dot gold');
+      dot.setAttribute('r','2.5');
+      dot.style.animationDelay=i*0.3+'s';
+      var am=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+      am.setAttribute('dur',(2+i*0.3)+'s');
+      am.setAttribute('repeatCount','indefinite');
+      am.setAttribute('path',d);
+      dot.appendChild(am);
+      svg.appendChild(dot);
+
+      var arr=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      var ax=to.x+2,ay=to.y;
+      arr.setAttribute('points',(ax+7)+','+(ay-3.5)+' '+ax+','+ay+' '+(ax+7)+','+(ay+3.5));
+      arr.setAttribute('class','arch-flow-arrow gold');
+      svg.appendChild(arr);
+    });
+  }
+  window.addEventListener('load',function(){setTimeout(drawArchFlows,200)});
+  window.addEventListener('resize',drawArchFlows);
+})();
+</script>
+
+  <div class="container"><!-- reopen container -->
+    <h3>최종 목적지: NHN 자체 서비스 조합</h3>
+    <div class="pipeline" style="text-align:left;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div>
+          <p style="font-weight:700; margin-bottom:8px;">NHN Dooray (전달 + 수집)</p>
+          <p style="font-size:0.85rem;">메신저/이메일 리포트 전달, 위키/캘린더에서 운영 맥락 수집</p>
+        </div>
+        <div>
+          <p style="font-weight:700; margin-bottom:8px;">NHN Playground (두뇌)</p>
+          <p style="font-size:0.85rem;">LLM + 시스템 프롬프트. 도메인 지식/가드레일 내장</p>
+        </div>
+      </div>
+      <div style="text-align:center; padding:12px 0; font-size:1.2rem; color:var(--gray-500);">&darr; MCP 데이터 허브 &darr;</div>
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+        <div class="pipeline-box" style="text-align:center;">MMP<br><small>AppsFlyer API</small></div>
+        <div class="pipeline-box" style="text-align:center;">Context<br><small>운영변경/이벤트/정책</small></div>
+        <div class="pipeline-box" style="text-align:center;">내부 BI<br><small>LTV/세그먼트</small></div>
+        <div class="pipeline-box" style="text-align:center;">크리에이티브<br><small>소재/메타데이터</small></div>
+      </div>
+    </div>
+
+    <h3>스프린트 데모 범위 (2일 MVP)</h3>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-content">
+          <div class="flow-title">AppsFlyer MCP</div>
+          <div class="flow-desc">Pull API + Cohort API 연동</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-content">
+          <div class="flow-title">UA 마케팅 에이전트 (Claude Desktop + CLAUDE.md)</div>
+          <div class="flow-desc">도메인 지식/가드레일/분석 규칙 내장. 지표 분석 &rarr; 인사이트 &rarr; 리포트 생성</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-content">
+          <div class="flow-title">Context 저장소 (구글시트) + 이메일 자동 발송</div>
+          <div class="flow-desc">운영변경/이벤트/정책 기록. 일간/주간 리포트 전달</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.85rem; color:var(--gray-500);">
+      사전 준비(3/12~3/24): API 연동, 구글시트 적재 템플릿, 이상치 탐지 코드, 가드레일 프롬프트 설계를 사전 완료.
+    </p>
+  </div>
+</section>
+
+<!-- ============ 7. FEASIBILITY ============ -->
+<section id="feasibility">
+  <div class="container">
+    <h2><span class="num">07</span> 실현 가능성</h2>
+    <p class="section-sub">스프린톤 전, 핵심 기술 재료는 이미 확보 완료</p>
+
+    <div class="card-grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem; font-weight:900; color:var(--accent);">26+</div>
+        <p>CSV 데이터 파일<br><small>API 수집 확인</small></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem; font-weight:900; color:var(--accent);">6+</div>
+        <p>엑셀 리포트<br><small>자동 생성 파이프라인</small></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem; font-weight:900; color:var(--accent);">154</div>
+        <p>개 소재<br><small>분석 가능 단위</small></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:2rem; font-weight:900; color:var(--accent);">3개월</div>
+        <p>tROAS 히스토리<br><small>분석 가능 범위</small></p>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:24px;">
+      <table>
+        <thead><tr><th>기술 요소</th><th>상세</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td>AppsFlyer Pull API</td><td>일별 설치/매출/이벤트 수집</td><td><span class="tag tag-green">확인 완료</span></td></tr>
+          <tr><td>AppsFlyer Cohort API</td><td>D1~D90 리텐션 &amp; 코호트 매출</td><td><span class="tag tag-green">확인 완료</span></td></tr>
+          <tr><td>매체 데이터 수집</td><td>Google/Meta/Moloco/TikTok</td><td><span class="tag tag-green">확인 완료</span></td></tr>
+          <tr><td>AppsFlyer MCP 서버</td><td>Claude Desktop 연동 서버</td><td><span class="tag tag-green">확인 완료</span></td></tr>
+          <tr><td>리포트 자동 생성</td><td>엑셀/PDF 자동화</td><td><span class="tag tag-green">검증 완료</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>확장 로드맵</h3>
+    <div class="roadmap">
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div>
+          <div class="roadmap-label">Step 1</div>
+          <div class="roadmap-desc">담당자 1인<br>반복 업무 자동화</div>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div>
+          <div class="roadmap-label">Step 2</div>
+          <div class="roadmap-desc">크리에이티브<br>인텔리전스</div>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div>
+          <div class="roadmap-label">Step 3</div>
+          <div class="roadmap-desc">내부 데이터 통합<br>유저 단위 분석</div>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot"></div>
+        <div>
+          <div class="roadmap-label">Step 4</div>
+          <div class="roadmap-desc">다른 NHN 게임<br>확산</div>
+        </div>
+      </div>
+      <div class="roadmap-item">
+        <div class="roadmap-dot" style="background:var(--green); box-shadow:0 0 0 2px var(--green);"></div>
+        <div>
+          <div class="roadmap-label">Step 5</div>
+          <div class="roadmap-desc">NHN Cloud<br>서비스 확장</div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center; color:var(--gray-500); font-size:0.9rem;">
+      검증 &rarr; 확장 &rarr; 확산 &rarr; 서비스화
+    </p>
+  </div>
+</section>
+
+<!-- ============ 8. OUR APPROACH ============ -->
+<section id="approach" style="background:var(--primary); color:white;">
+  <div class="container">
+    <h2 style="color:white;"><span class="num" style="color:var(--yellow);">08</span> 우리의 접근</h2>
+    <p class="section-sub" style="color:rgba(255,255,255,0.6);">AI에게 무엇을 맡기고, 무엇을 쥐고 있을 것인가</p>
+
+    <div class="insight-block" style="background:rgba(255,255,255,0.05); border-color:var(--yellow);">
+      <div class="insight-title" style="color:var(--yellow);">INSIGHT 1 &mdash; AI를 잘 쓴다는 것</div>
+      <p style="color:rgba(255,255,255,0.85);">
+        많이 쓰는 것도, 빠르게 쓰는 것도 아니다. 무엇을 맡기고, 무엇을 내 손에 쥐고 있어야 하는지 아는 것이다.
+        <br>&rarr; <strong style="color:var(--yellow);">Human-in-the-Loop.</strong> 이 경계를 시스템으로 구현한 것이 가드레일이다.
+      </p>
+    </div>
+
+    <div class="insight-block" style="background:rgba(255,255,255,0.05); border-color:var(--yellow);">
+      <div class="insight-title" style="color:var(--yellow);">INSIGHT 2 &mdash; 블랙박스 시대에 남는 것</div>
+      <p style="color:rgba(255,255,255,0.85);">
+        에이전트가 데이터를 처리한다. 하지만 어떤 데이터가 중요한지는 사람이 안다. 남는 건 목표를 정의하는 사람, 맥락을 아는 사람이다.
+        <br>&rarr; <strong style="color:var(--yellow);">Context Layer.</strong> 현장 전문가의 맥락 지식을 시스템에 녹인다.
+      </p>
+    </div>
+
+    <div class="insight-block" style="background:rgba(255,255,255,0.05); border-color:var(--yellow);">
+      <div class="insight-title" style="color:var(--yellow);">INSIGHT 3 &mdash; AI는 사고를 증폭하는 파트너</div>
+      <p style="color:rgba(255,255,255,0.85);">
+        AI는 정답을 주는 기계가 아니라, 사고를 증폭하는 파트너다. 맥락(Context)이 영혼을 만든다.
+        <br>&rarr; 같은 ROAS 42%도 <strong style="color:var(--yellow);">"페이백 이벤트 기간"</strong>이라는 맥락이 붙는 순간 완전히 다른 의미가 된다.
+      </p>
+    </div>
+
+    <div style="text-align:center; margin-top:48px; padding:24px; border:1px solid rgba(255,255,255,0.2); border-radius:12px;">
+      <p style="font-size:1.1rem; color:rgba(255,255,255,0.9); margin-bottom:0;">
+        이 시스템은 사람을 대체하지 못한다.<br>
+        다만, <strong style="color:var(--yellow);">사람의 판단을 더 빠르고, 더 정확하게 만드는 것</strong> &mdash; 그것이 이 시스템의 방향이다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <strong>Context-Aware Marketing AI Agent</strong><br>
+  NHN AI 스프린톤 2026 &middot; NHN 마케팅실 오세영
+</footer>
+
+<!-- Smooth scroll + active nav -->
+<script>
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+window.addEventListener('scroll', () => {
+  const sections = document.querySelectorAll('section[id]');
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  document.querySelectorAll('nav a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>
