@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f5f5f5; color: #1a1a2e; padding: 32px; max-width: 800px; margin: 0 auto; }
+
+  .report-card { background: white; border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border: 1px solid #e8ecf2; }
+
+  .header { background: linear-gradient(135deg, #1a2744, #2d4a7a); color: white; border-radius: 12px; padding: 24px 32px; margin-bottom: 20px; }
+  .header h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .header .sub { font-size: 12px; opacity: 0.7; }
+
+  h2 { font-size: 16px; font-weight: 700; color: #e85d3a; margin-bottom: 16px; border-left: 4px solid #e85d3a; padding-left: 12px; }
+  h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; color: #495057; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 12px; }
+  th { background: #f0f4ff; color: #1a2744; font-weight: 600; padding: 8px 10px; text-align: center; border-bottom: 2px solid #dee2e6; font-size: 11px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #f1f3f5; text-align: center; }
+  td:first-child { text-align: left; font-weight: 500; }
+  .up { color: #e85d3a; font-weight: 600; }
+  .down { color: #339af0; font-weight: 600; }
+
+  .insight-box { background: #f8f9fc; border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; font-size: 13px; line-height: 1.7; border-left: 3px solid #339af0; }
+  .insight-box strong { color: #1a2744; }
+
+  .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .badge-high { background: #fff3f0; color: #e85d3a; }
+  .badge-medium { background: #fff8e1; color: #e67e22; }
+
+  .action-table td:nth-child(3) { text-align: center; }
+  .action-table td:nth-child(4) { text-align: center; font-weight: 600; color: #495057; }
+
+  .chart-placeholder { background: white; border-radius: 8px; padding: 20px; text-align: center; margin: 12px 0; }
+  .chart-placeholder img { max-width: 100%; }
+
+  .footer { text-align: center; font-size: 11px; color: #868e96; margin-top: 24px; padding: 16px; }
+  .footer strong { color: #495057; }
+
+  /* CPA Chart - CSS only mini chart */
+  .mini-chart { display: flex; align-items: flex-end; gap: 3px; height: 80px; padding: 12px 0; }
+  .mini-bar { flex: 1; border-radius: 3px 3px 0 0; transition: all 0.3s; position: relative; }
+  .mini-bar.google { background: #339af0; }
+  .mini-bar.moloco { background: #20c997; }
+  .mini-bar.tiktok { background: #e85d3a; }
+
+  .campaign-log td:first-child { width: 70px; color: #868e96; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>MARCO Daily Report — 한게임포커 클래식</h1>
+  <div class="sub">3/29 | Exchange Rate: 1 USD = 1,490 KRW | Markup: NHN AD 9%</div>
+</div>
+
+<!-- 1. 종합 의견 -->
+<div class="report-card">
+  <h2>1. 종합 의견</h2>
+  <p style="font-size:11px; color:#868e96; margin-bottom:12px;">* 기준: MKT Total (Reward, Reengagement 제외)</p>
+
+  <table>
+    <tr>
+      <th>지표</th><th>3/27 (D-2)</th><th>3/28 (D-1)</th><th>3/29 (D-0)</th><th>변화 (전일비)</th>
+    </tr>
+    <tr><td>Installs</td><td>1,042</td><td>974</td><td>949</td><td class="down">-2.4%</td></tr>
+    <tr><td>NRU</td><td>454</td><td>448</td><td>481</td><td class="up">+5.9%</td></tr>
+    <tr><td>CPI (KRW)</td><td>24,102</td><td>24,388</td><td>25,456</td><td class="up">+5.7%</td></tr>
+    <tr><td>CPA (KRW)</td><td>53,108</td><td>52,780</td><td>51,291</td><td class="down">-2.6%</td></tr>
+    <tr><td>ROAS D1</td><td>3.74%</td><td>3.68%</td><td>2.11%</td><td class="down" style="color:#e85d3a">-43.8%</td></tr>
+  </table>
+  <p style="font-size:10.5px; color:#868e96; margin-bottom:16px;">MKT excl Reward/Reengagement 기준. ROAS D1 코호트 기준.</p>
+
+  <h3>인사이트</h3>
+  <div class="insight-box">
+    <strong>인스톨 소폭 감소, CPA는 개선</strong> — 인스톨 949건(-2.4%)으로 소폭 감소했으나 CPA ₩51,291로 개선, NRU 481건으로 +5.9% 증가. <span class="badge badge-high">HIGH</span> <span style="font-size:11px; color:#868e96; margin-left:4px;">근거: CPA ₩</span>
+  </div>
+  <div class="insight-box">
+    <strong>Moloco ROAS 37% 급등</strong> — 41건 인스톨에 코호트 매출 ₩59.5만원, ROAS 36.97%로 전달 0.36% 대비 대폭 개선. <span class="badge badge-medium">MEDIUM</span> <span style="font-size:11px; color:#868e96; margin-left:4px;">Moloco revenue ₩595,195</span>
+  </div>
+  <div class="insight-box">
+    <strong>Google V2(day2_reward) CPA 여전히 높음</strong> — CPA ₩109,751로 높은 수준. 인스톨 77건, ROAS 1.23%. V2 lobbyentry 대비 2배 수준. <span class="badge badge-medium">MEDIUM</span> <span style="font-size:11px; color:#868e96; margin-left:4px;">V2 day2_reward CPI $25.34</span>
+  </div>
+</div>
+
+<!-- 2. 액션 제안 -->
+<div class="report-card">
+  <h2>2. 액션 제안</h2>
+  <table class="action-table">
+    <tr><th>매체</th><th>제안</th><th>신뢰도</th><th>우선순위</th></tr>
+    <tr>
+      <td><strong>Moloco_AEO</strong></td>
+      <td style="text-align:left; font-size:12px;">ROAS 37%로 급등. 2~3일 추이 확인 후 안정적이면 예산 증액 검토.</td>
+      <td><span class="badge badge-medium">MEDIUM</span></td>
+      <td>WATCH</td>
+    </tr>
+    <tr>
+      <td><strong>Google V2<br>(lobbyentry)</strong></td>
+      <td style="text-align:left; font-size:12px;">대량 볼륨 매체. CPA ₩64K로 안정적, 현 수준 유지.</td>
+      <td><span class="badge badge-high">HIGH</span></td>
+      <td>MAINTAIN</td>
+    </tr>
+    <tr>
+      <td><strong>Google V3<br>(tROAS)</strong></td>
+      <td style="text-align:left; font-size:12px;">ROAS 19.11%로 전달 60.94% 대비 하락. 일별 변동 크므로 주간 평균 기준 판단.</td>
+      <td><span class="badge badge-medium">MEDIUM</span></td>
+      <td>MONITOR</td>
+    </tr>
+  </table>
+</div>
+
+<!-- 3. CPA 추이 -->
+<div class="report-card">
+  <h2>3. CPA 추이 (최근 14일)</h2>
+  <div style="text-align:center; padding:8px 0;">
+    <svg width="700" height="200" viewBox="0 0 700 200" style="max-width:100%;">
+      <!-- Grid lines -->
+      <line x1="50" y1="20" x2="50" y2="170" stroke="#e9ecef" stroke-width="1"/>
+      <line x1="50" y1="170" x2="680" y2="170" stroke="#dee2e6" stroke-width="1"/>
+      <line x1="50" y1="120" x2="680" y2="120" stroke="#f1f3f5" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="50" y1="70" x2="680" y2="70" stroke="#f1f3f5" stroke-width="1" stroke-dasharray="4"/>
+
+      <!-- Y axis labels -->
+      <text x="45" y="175" text-anchor="end" font-size="10" fill="#868e96">$0</text>
+      <text x="45" y="125" text-anchor="end" font-size="10" fill="#868e96">$30</text>
+      <text x="45" y="75" text-anchor="end" font-size="10" fill="#868e96">$60</text>
+      <text x="45" y="25" text-anchor="end" font-size="10" fill="#868e96">$90</text>
+
+      <!-- X axis labels -->
+      <text x="95" y="188" text-anchor="middle" font-size="9" fill="#868e96">03/17</text>
+      <text x="185" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/19</text>
+      <text x="275" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/21</text>
+      <text x="365" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/23</text>
+      <text x="455" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/25</text>
+      <text x="545" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/27</text>
+      <text x="635" y="188" font-size="9" fill="#868e96" text-anchor="middle">03/29</text>
+
+      <!-- Google V2 line (blue) -->
+      <polyline points="95,138 140,142 185,135 230,130 275,145 320,140 365,148 410,135 455,142 500,138 545,145 590,140 635,138" fill="none" stroke="#339af0" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Google V3 line (red) -->
+      <polyline points="95,120 140,80 185,115 230,95 275,60 320,105 365,85 410,110 455,100 500,65 545,95 590,120 635,50" fill="none" stroke="#e85d3a" stroke-width="2.5" stroke-linejoin="round"/>
+      <!-- Moloco line (green) -->
+      <polyline points="95,140 140,135 185,125 230,138 275,145 320,150 365,130 410,142 455,148 500,140 545,135 590,145 635,132" fill="none" stroke="#20c997" stroke-width="2.5" stroke-linejoin="round"/>
+
+      <!-- Dots -->
+      <circle cx="635" cy="138" r="4" fill="#339af0"/>
+      <circle cx="635" cy="50" r="4" fill="#e85d3a"/>
+      <circle cx="635" cy="132" r="4" fill="#20c997"/>
+
+      <!-- Legend -->
+      <rect x="440" y="22" width="10" height="3" rx="1" fill="#339af0"/>
+      <text x="455" y="26" font-size="10" fill="#495057">Google V2(lobbyentry)</text>
+      <rect x="440" y="34" width="10" height="3" rx="1" fill="#e85d3a"/>
+      <text x="455" y="38" font-size="10" fill="#495057">Google V3(tROAS)</text>
+      <rect x="440" y="46" width="10" height="3" rx="1" fill="#20c997"/>
+      <text x="455" y="50" font-size="10" fill="#495057">Moloco_AEO</text>
+    </svg>
+    <p style="font-size:10px; color:#868e96; margin-top:4px;">상세 데이터는 첨부된 일일 리포트를 참고해 주세요.</p>
+  </div>
+</div>
+
+<!-- 4. 크리에이티브 현황 -->
+<div class="report-card">
+  <h2>4. 크리에이티브 현황 (최근 14일)</h2>
+  <h3>UAC_V2(lobbyentry)_2506</h3>
+  <table>
+    <tr><th style="text-align:left">광고 그룹</th><th>비용</th><th>CPI</th><th>전환</th><th>CTR</th><th>IPM</th></tr>
+    <tr><td style="text-align:left">[발렌타인드림_무협지_뉴비탈출]</td><td>₩23.8M</td><td>—</td><td>—</td><td>1.20%</td><td>6.1</td></tr>
+    <tr><td style="text-align:left">[발렌타인드림_풍성한 골드 혜택]</td><td>₩23.6M</td><td>—</td><td>—</td><td>0.59%</td><td>0.7</td></tr>
+    <tr><td style="text-align:left">[발렌타인드림_VIP 포커모임]</td><td>₩20.3M</td><td>—</td><td>—</td><td>1.23%</td><td>6.3</td></tr>
+    <tr><td style="text-align:left">[발렌타인드림_업계 1위 소재_누구나 쉽게 즐기는 포커]</td><td>₩17.0M</td><td>—</td><td>—</td><td>0.62%</td><td>0.4</td></tr>
+    <tr><td style="text-align:left">[발렌타인드림_부담없이 즐기는 포커]</td><td>₩15.8M</td><td>—</td><td>—</td><td>0.80%</td><td>0.8</td></tr>
+  </table>
+
+  <h3>UAC_tROAS_2209</h3>
+  <table>
+    <tr><th style="text-align:left">광고 그룹</th><th>비용</th><th>CPI</th><th>전환</th><th>CTR</th><th>IPM</th></tr>
+    <tr><td style="text-align:left">[발렌타인드림_부루마불 세계여행]</td><td>₩6.0M</td><td>—</td><td>—</td><td>2.28%</td><td>23.1</td></tr>
+    <tr><td style="text-align:left">[크리에이티브_승부사들의 가장 큰 판]</td><td>₩6.7M</td><td>—</td><td>—</td><td>2.23%</td><td>20.3</td></tr>
+    <tr><td style="text-align:left">[스파클_크게 먹지 못한 이유]</td><td>₩2.1M</td><td>—</td><td>—</td><td>0.23%</td><td>0.6</td></tr>
+    <tr><td style="text-align:left">[발렌타인드림_뉴비 요약편]</td><td>₩1.9M</td><td>—</td><td>—</td><td>0.17%</td><td>0.2</td></tr>
+  </table>
+  <p style="font-size:10px; color:#868e96;">* Google Ads 데이터 기준. CPI = Cost / Conversions(Installs). IPM = Installs per 1,000 Impressions.</p>
+</div>
+
+<!-- 5. 캠페인 변동 -->
+<div class="report-card">
+  <h2>5. 캠페인 변동 이력 (최근 7일)</h2>
+  <table class="campaign-log">
+    <tr><th>날짜</th><th>변경 내용</th><th>캠페인</th><th>변경자</th></tr>
+    <tr><td>3/28</td><td>예산 변경</td><td>UAC_V2(lobbyentry)_2506</td><td>di_impart1</td></tr>
+    <tr><td>3/25</td><td>상태 일시중지 → 활성</td><td>UAC_V2(day2_reward)_2603</td><td>di_impart1</td></tr>
+  </table>
+</div>
+
+<!-- 6. 경쟁사 -->
+<div class="report-card">
+  <h2>6. 경쟁사 동향 (Sensor Tower)</h2>
+  <p style="font-size:13px; color:#868e96;">특이사항 없음. 주요 경쟁사 순위 변동 없음.</p>
+  <p style="font-size:10px; color:#adb5bd; margin-top:8px;">Sensor Tower 기준</p>
+</div>
+
+<div class="footer">
+  <strong>Generated by MARCO Agent V8.8 | NHN Performance Marketing AI</strong><br>
+  리포트 파일이 첨부되어 있습니다. 매체별 상세 데이터는 첨부 파일을 참고해 주세요.
+</div>
+
+</body>
+</html>

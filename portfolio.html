@@ -608,6 +608,7 @@
   <a href="#solution">솔루션</a>
   <a href="#diff">차별점</a>
   <a href="#architecture">기술 구조</a>
+  <a href="#output">결과물</a>
 </nav>
 
 <!-- ============ 1. EXECUTIVE SUMMARY ============ -->
@@ -1127,6 +1128,47 @@
   </div>
 </section>
 
+
+<!-- ============ 6. OUTPUT / 결과물 ============ -->
+<section id="output">
+  <div class="container">
+    <h2><span class="num">06</span> 결과물</h2>
+    <p class="section-sub">MARCO 에이전트가 매일 자동 생성하는 실제 리포트</p>
+
+    <h3>Daily Performance Report</h3>
+    <p>MARCO는 매일 아침 AppsFlyer, Meta, Google Ads, Sensor Tower 데이터를 자동 수집하고, Context-Aware 분석 &rarr; 이상탐지 &rarr; 액션 제안까지 포함한 리포트를 생성하여 이메일로 발송합니다.</p>
+
+    <div style="border:1px solid var(--gray-200); border-radius:12px; overflow:hidden; margin:28px 0; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+      <iframe src="images/report_preview.html" style="width:100%; height:1800px; border:none; pointer-events:none;" loading="lazy"></iframe>
+    </div>
+
+    <div class="callout">
+      이 리포트는 <strong>단순 데이터 나열이 아닌, 맥락 기반 판단</strong>을 포함합니다.<br>
+      &bull; <strong>종합 의견:</strong> 전일/전주 대비 변화율 + 원인 추정 + 신뢰도 등급<br>
+      &bull; <strong>액션 제안:</strong> 매체별 우선순위와 구체적 실행 방안<br>
+      &bull; <strong>이상탐지:</strong> KPI &plusmn;20% 초과 시 자동 알림 + 체크리스트 기반 원인 분석<br>
+      &bull; <strong>경쟁사 동향:</strong> Sensor Tower 기반 자동 모니터링
+    </div>
+
+    <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card" style="text-align:center; padding:20px;">
+        <span class="icon">&#x23F1;</span>
+        <h4>생성 시간</h4>
+        <p style="font-size:0.85rem; margin:0;">평균 <strong style="color:var(--accent);">3분</strong><br><span style="font-size:0.75rem;color:var(--gray-500);">기존 수작업 2~3시간</span></p>
+      </div>
+      <div class="card" style="text-align:center; padding:20px;">
+        <span class="icon">&#x1F4CA;</span>
+        <h4>데이터 소스</h4>
+        <p style="font-size:0.85rem; margin:0;"><strong style="color:var(--accent);">5개</strong> 동시 수집<br><span style="font-size:0.75rem;color:var(--gray-500);">AF · Meta · Google · ST · 내부DB</span></p>
+      </div>
+      <div class="card" style="text-align:center; padding:20px;">
+        <span class="icon">&#x1F6E1;</span>
+        <h4>신뢰도 판정</h4>
+        <p style="font-size:0.85rem; margin:0;">Guardrail <strong style="color:var(--accent);">3등급</strong><br><span style="font-size:0.75rem;color:var(--gray-500);">HIGH · MEDIUM · LOW</span></p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ============ FOOTER ============ -->
 <footer>
