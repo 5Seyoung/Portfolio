@@ -568,6 +568,87 @@
     .arch-col-label { text-align: left; }
   }
 
+  /* ── EXECUTION FLOW ── */
+  .exec-flow {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 28px 32px;
+  }
+  .exec-flow-title {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 28px;
+  }
+  .exec-flow-title span { color: #4eecc4; }
+  .exec-pipeline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .exec-step {
+    flex: 1;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .exec-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 800;
+    margin-bottom: 10px; z-index: 2; flex-shrink: 0;
+  }
+  .exec-step.step-cyan .exec-num { background: #4eecc4; color: #0d1b2a; }
+  .exec-step.step-gold .exec-num { background: #f0a030; color: #0d1b2a; }
+  .exec-card {
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 14px 14px 12px;
+    width: 100%;
+    text-align: center;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+  }
+  .exec-step.step-cyan .exec-card { border: 1px solid rgba(78,236,196,0.15); }
+  .exec-step.step-gold .exec-card { border: 1px solid rgba(240,160,48,0.2); }
+  .exec-card-title {
+    font-size: 0.78rem; font-weight: 700; color: #fff;
+    line-height: 1.4; margin-bottom: 8px;
+  }
+  .exec-card-sub {
+    font-size: 0.62rem; color: rgba(255,255,255,0.45);
+    line-height: 1.6; text-align: left;
+  }
+  .exec-card-sub span { display: block; padding-left: 8px; text-indent: -8px; }
+  .exec-arrow {
+    display: flex; align-items: flex-start; padding-top: 13px;
+    flex-shrink: 0; width: 32px; justify-content: center;
+  }
+  .exec-arrow svg { width: 28px; height: 12px; }
+  .exec-legend {
+    display: flex; justify-content: center; gap: 16px;
+    margin-top: 20px; flex-wrap: wrap;
+  }
+  .exec-legend-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.6rem; color: rgba(255,255,255,0.35);
+  }
+  .exec-legend-line {
+    width: 10px; height: 2px; border-radius: 1px; display: inline-block;
+  }
+  @media (max-width: 768px) {
+    .exec-pipeline { flex-direction: column; align-items: center; }
+    .exec-step { max-width: 320px; flex-direction: row; align-items: flex-start; gap: 12px; }
+    .exec-num { margin-bottom: 0; }
+    .exec-card { text-align: left; min-height: auto; }
+    .exec-arrow { padding-top: 0; width: auto; height: 24px; transform: rotate(90deg); }
+  }
+
   /* ── FOOTER ── */
   footer {
     background: var(--primary);
@@ -1107,6 +1188,95 @@
   window.addEventListener('resize',drawArchFlows);
 })();
 </script>
+
+  <!-- Execution Flow -->
+  <div class="exec-flow">
+    <div class="exec-flow-title"><span>Execution Flow</span> &mdash; MARCO 실행 순서</div>
+    <div class="exec-pipeline">
+
+      <div class="exec-step step-cyan">
+        <div class="exec-num">1</div>
+        <div class="exec-card">
+          <div class="exec-card-title">MCP 도구로<br>데이터 호출</div>
+          <div class="exec-card-sub">
+            <span>&#183; MMP (AppsFlyer)</span>
+            <span>&#183; 매체 대시보드</span>
+            <span>&#183; 스토어 콘솔</span>
+            <span>&#183; 센서타워</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exec-arrow">
+        <svg viewBox="0 0 28 12"><path d="M0 6 L20 6" stroke="#4eecc4" stroke-width="1.5" stroke-dasharray="3 2" fill="none"/><polygon points="19,2.5 26,6 19,9.5" fill="#4eecc4" opacity="0.7"/></svg>
+      </div>
+
+      <div class="exec-step step-cyan">
+        <div class="exec-num">2</div>
+        <div class="exec-card">
+          <div class="exec-card-title">Config 규칙으로<br>리포트 생성</div>
+          <div class="exec-card-sub">
+            <span>&#183; 캠페인 명칭·유형</span>
+            <span>&#183; 마크업·매핑 규칙</span>
+            <span>&#183; 지정 양식 적용</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exec-arrow">
+        <svg viewBox="0 0 28 12"><path d="M0 6 L20 6" stroke="#4eecc4" stroke-width="1.5" stroke-dasharray="3 2" fill="none"/><polygon points="19,2.5 26,6 19,9.5" fill="#4eecc4" opacity="0.7"/></svg>
+      </div>
+
+      <div class="exec-step step-cyan">
+        <div class="exec-num">3</div>
+        <div class="exec-card">
+          <div class="exec-card-title">사고 원칙으로<br>인사이트 도출</div>
+          <div class="exec-card-sub">
+            <span>&#183; 역할 정의·사고 규칙</span>
+            <span>&#183; 목적 분류</span>
+            <span>&#183; 서비스 특징 반영</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exec-arrow">
+        <svg viewBox="0 0 28 12"><path d="M0 6 L20 6" stroke="#f0a030" stroke-width="1.5" stroke-dasharray="3 2" fill="none"/><polygon points="19,2.5 26,6 19,9.5" fill="#f0a030" opacity="0.7"/></svg>
+      </div>
+
+      <div class="exec-step step-gold">
+        <div class="exec-num">4</div>
+        <div class="exec-card">
+          <div class="exec-card-title">가드레일로<br>검수 &amp; 등급 판정</div>
+          <div class="exec-card-sub">
+            <span>&#183; 이상 탐지 규칙</span>
+            <span>&#183; 신뢰도 등급 표기</span>
+            <span>&#183; 근거 함께 첨부</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exec-arrow">
+        <svg viewBox="0 0 28 12"><path d="M0 6 L20 6" stroke="#f0a030" stroke-width="1.5" stroke-dasharray="3 2" fill="none"/><polygon points="19,2.5 26,6 19,9.5" fill="#f0a030" opacity="0.7"/></svg>
+      </div>
+
+      <div class="exec-step step-gold">
+        <div class="exec-num">5</div>
+        <div class="exec-card">
+          <div class="exec-card-title">담당 부서에<br>자동 발송</div>
+          <div class="exec-card-sub">
+            <span>&#183; 이메일 자동 발송</span>
+            <span>&#183; Dooray 메신저</span>
+            <span>&#183; 매일 정해진 시간</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="exec-legend">
+      <div class="exec-legend-item"><span class="exec-legend-line" style="background:#4eecc4;"></span>Config (YAML) &amp; Brain (Markdown) 기반</div>
+      <div class="exec-legend-item"><span class="exec-legend-line" style="background:#f0a030;"></span>Guardrail 검수 후 자동 실행</div>
+    </div>
+  </div>
 
   <div class="container" style="padding-top:32px;"><!-- reopen container -->
     <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
